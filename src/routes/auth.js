@@ -42,7 +42,6 @@ authRouter.post('/signup', async (req, res) => {
 
 authRouter.post('/login', async (req, res) => {
   try {
-    console.log("Login Request Received")
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
@@ -56,16 +55,12 @@ authRouter.post('/login', async (req, res) => {
     const token = await user.getJWT();
     res.cookie('token', token);
     console.log("User logged in:", user.email);
-    // res.json({
-    //   Token: `Token Generated ${token}`,
-    //   Message: `Login Succesfull`
-    // });
-    res.send(user)
+    return res.send(user)
 
   }
   catch (err) {
     console.error("Error in /login:", err.message);
-    res.send(err.message);
+    return res.send(err.message);
   }
 });
 
