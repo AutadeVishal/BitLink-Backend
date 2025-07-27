@@ -2,19 +2,20 @@ const express = require('express');
 const app = express();
 const connectDB=require('./config/database');
 const cookieParser=require('cookie-parser');
+const cors=require('cors');
 
-//const validUpdate = require('./utils/validUpdate.js');
-//const jwt = require('jsonwebtoken');
-//const {validateSignUpData}=require("./middlewares/auth.js");
-
-
+app.use(cors({//for cross origin and cookies
+  origin:"http://localhost:5173",
+   credentials:true,
+}));
+app.use(express.json());
+app.use(cookieParser());
 //routers
 const authRouter=require('./routes/auth.js');
 const profileRouter=require('./routes/profile.js');
 const requestRouter=require('./routes/connectionRequestRouter.js');
 const userRouter=require('./routes/userRoute.js');
-app.use(express.json());
-app.use(cookieParser());//converts the incoming request body to JSON format
+//converts the incoming request body to JSON format
 connectDB()
 .then(()=>app.listen(3000, () => {
     console.log("Server is running on port 3000");
