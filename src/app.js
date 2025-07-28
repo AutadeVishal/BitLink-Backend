@@ -3,18 +3,19 @@ const app = express();
 const connectDB=require('./config/database');
 const cookieParser=require('cookie-parser');
 const cors=require('cors');
-
-app.use(cors({//for cross origin and cookies
-  origin:"http://localhost:5173",
-   credentials:true,
-}));
-app.use(express.json());
-app.use(cookieParser());
-//routers
 const authRouter=require('./routes/auth.js');
 const profileRouter=require('./routes/profile.js');
 const requestRouter=require('./routes/connectionRequestRouter.js');
 const userRouter=require('./routes/userRoute.js');
+app.use(cors({//for cross origin and cookies
+  origin:"http://localhost:5173",
+   credentials:true,
+   secure:false
+}));
+app.use(express.json());
+app.use(cookieParser());
+//routers
+
 //converts the incoming request body to JSON format
 connectDB()
 .then(()=>app.listen(3000, () => {
