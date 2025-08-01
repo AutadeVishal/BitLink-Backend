@@ -4,10 +4,9 @@ const { SECRET_KEY } = require('../config/constants.js');
 
 module.exports = async (req, res, next) => {
     try {
-        console.log("User auth")
         const { token } = req.cookies;
         if (!token) {
-            throw new Error("Token is Not Valid");
+            return res.status(401).send("Unauthorized: No token provided");
         }
 
         // Verify the token
@@ -15,21 +14,21 @@ module.exports = async (req, res, next) => {
         const _id = decodedObj._id; // Extract _id from the token payload
 
         if (!_id) {
-            throw new Error("Invalid Token: _id is missing");
+            return res.status(401).send("Invalid Token: _id is missing");
         }
 
         // Find the user by _id
-        const user = await User.findById({ _id }); // Pass the _id directly
+        const user = await User.findById(_id);
         if (!user) {
-            throw new Error("User not Found");
+          return res.status(401).send("User not Found");
         }
 
         // Attach the user to req.user
         req.user = user;
         next();
     } catch (err) {
-        console.log("oohh yes");
+        console.log("Error in userAuth.js");
         console.log(err.message);
-        return res.status(401).send(err.message);
+        return res.status(400).send(err.message);
     }
 };
