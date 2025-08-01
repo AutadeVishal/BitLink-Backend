@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require("../models/User.js");
-const { secretKey } = require('../config/constants.js');
+const { SECRET_KEY } = require('../config/constants.js');
 
 module.exports = async (req, res, next) => {
     try {
@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
         }
 
         // Verify the token
-        const decodedObj = jwt.verify(token, secretKey); // Verify the token using the secret key
+        const decodedObj = jwt.verify(token, SECRET_KEY); // Verify the token using the secret key
         const _id = decodedObj._id; // Extract _id from the token payload
 
         if (!_id) {
@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
         req.user = user;
         next();
     } catch (err) {
-        
+        console.log("oohh yes");
         console.log(err.message);
         return res.status(401).send(err.message);
     }
