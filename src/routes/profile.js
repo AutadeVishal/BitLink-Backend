@@ -3,6 +3,8 @@ const profileRouter = express.Router();
 const User = require('../models/user.js');
 const { validateEditProfileData } = require('../utils/validation.js')
 const userAuth = require('../middlewares/userAuth.js')
+const bcrypt=require('bcrypt');
+const {SECRET_KEY}=require('../config/constants.js');
 
 
 profileRouter.get('/view', userAuth, async (req, res) => {
@@ -30,6 +32,10 @@ profileRouter.patch('/edit', userAuth, async (req, res) => {
       throw new Error("Not Allowed to Edit the Fields");
     };
     const loggedInUser = req.user;//this is provided by middlewre userAuth funciton
+    if (data.password) {
+      const passwordHash = await bcrypt.hash(data.password, 10);
+      data.password = passwordHash;
+    }
     const user = await User.findByIdAndUpdate(loggedInUser._id, data, { new: true, runValidators: true });
     console.log(`User ${user.firstName} ${user.lastName} got Updated Successfully`)
     res.json({

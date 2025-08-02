@@ -3,7 +3,7 @@ const express = require("express");
 const authRouter = express.Router();
 const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
-
+const dummydata=require('./dummy_users_100.js')
 const { validateSignUpData } = require("../utils/validation");
 authRouter.post("/signup", async (req, res) => {
   try {
@@ -16,7 +16,8 @@ authRouter.post("/signup", async (req, res) => {
     if (user) {
       throw new Error("User With This Email Id Already Exists:");
     }
-    //here key Names are same as the model keys so we can directly pass the req.body to the model instead of key:value pairs
+    
+
     const newUser = new User({
       firstName,
       lastName,
@@ -27,7 +28,6 @@ authRouter.post("/signup", async (req, res) => {
       skills,
       profileURL
     });
-
     const insertedDocument = await newUser.save();
     console.log(" User created:", insertedDocument);
 
