@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
+const { mongoURL } =require("./constants")
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      "what??"
+      mongoURL
     );
     console.log("Database  connected successfully");
   } catch (err) {
@@ -11,4 +12,3 @@ const connectDB = async () => {
   }
 };
 module.exports = connectDB;
-//CodeMateAdmin1144
