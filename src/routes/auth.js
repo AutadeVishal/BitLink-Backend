@@ -42,11 +42,11 @@ authRouter.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("User Not Found");
+      return res.status(401).send("User Not Found");
     }
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) {
-      throw new Error("Invalid Password");
+      return res.status(401).send("Invalid Password");
     }
     const token = await user.getJWT();
     res.cookie("token", token);
@@ -54,7 +54,7 @@ authRouter.post("/login", async (req, res) => {
     return res.send(user);
   } catch (err) {
     console.error("Error in /login:", err.message);
-    return res.send(err.message);
+    return res.status(400).send(err.message);
   }
 });
 
