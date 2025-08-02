@@ -1,5 +1,5 @@
 const validator = require("validator");
-const User = require("../models/User");
+const User = require("../models/user");
 
 const validateSignUpData = async (data) => {
   const { firstName, lastName, email, password } = data;
@@ -30,7 +30,7 @@ const validateSignUpData = async (data) => {
   }
 };
 const validateEditProfileData=async (data)=>{
-const allowedEditFields=["firstName","lastName","age","skills","about"];
+const allowedEditFields=["firstName","lastName","age","skills","about","profileURL"];
 const isEditAllowed=Object.keys(data).every(k=>allowedEditFields.includes(k));
 return isEditAllowed;
 }

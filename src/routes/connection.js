@@ -1,7 +1,7 @@
 const express = require('express');
 const requestRouter = express.Router();
-const User = require('../models/User.js')
-const  ConnectionRequestModel  = require('../models/connectionRequest')
+const User = require('../models/user.js')
+const  ConnectionRequestModel  = require('../models/connectionRequest.js')
 const userAuth = require('../middlewares/userAuth.js')
 requestRouter.post('/request/send/:status/:toUserEmail', userAuth, async (req, res) => {
     try {
@@ -21,11 +21,6 @@ requestRouter.post('/request/send/:status/:toUserEmail', userAuth, async (req, r
             $or: [
                 { fromUserId: fromUserId, toUserId: toUserId },
                 { fromUserId: toUserId, toUserId: fromUserId },
-                //this is same as above commented 
-                //here it check from the array of condition whether anyone of them is true 
-                //if true then return the document
-                //it is used to check mutiple conditions at a one like here from user and 
-                // to user can be checked interchangibly becouse direction doesn't matter
             ]
         });
 

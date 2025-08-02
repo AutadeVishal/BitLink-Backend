@@ -1,7 +1,7 @@
 //Routes Specific to Authorisation Routers
 const express = require("express");
 const authRouter = express.Router();
-const User = require("../models/User.js");
+const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
 
 const { validateSignUpData } = require("../utils/validation");
@@ -9,7 +9,7 @@ authRouter.post("/signup", async (req, res) => {
   try {
     await validateSignUpData(req.body); // Validate the input data
     const passwordHash = await bcrypt.hash(req.body.password, 10);
-    const { firstName, lastName, email, password, age, gender, skills } =
+    const { firstName, lastName, email, password, age, gender, skills ,profileURL} =
       req.body;
 
     const user = await User.findOne({ email: req.body.email });
@@ -25,15 +25,16 @@ authRouter.post("/signup", async (req, res) => {
       age,
       gender,
       skills,
+      profileURL
     });
 
     const insertedDocument = await newUser.save();
     console.log(" User created:", insertedDocument);
 
-    res.status(201).json({ message: "User created successfully" });
+   return res.status(201).json({ message: "User created successfully" });
   } catch (err) {
     console.error("Error in /signup:", err.message);
-    res.status(500).json({ error: err.message });
+   return res.status(501).json({ message: err.message });
   }
 });
 
