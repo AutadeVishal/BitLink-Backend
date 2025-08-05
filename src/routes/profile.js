@@ -12,7 +12,10 @@ profileRouter.get('/view', userAuth, async (req, res) => {
     const user = req.user;
     console.log("User found");
     console.log(user);
-    return res.json(user);
+    return res.json({
+      message: "User Found",
+      data: user
+    });
   } catch (err) {
     console.error("Error in /profile:", err.message);
     res.status(401).send("Invalid or expired token");
