@@ -120,7 +120,7 @@ requestRouter.post('/request/review/:status/:fromUserEmail', userAuth, async (re
 
         res.json({
             message: `${toUser.email} ${req.params.status} the request from ${fromUser.email}`,
-            updatedConnection: updatedConnection
+            data: updatedConnection
         });
     } catch (err) {
         console.log(`Error in /request/review/${req.params.status}/${req.params.fromUserEmail}:`, err.message);

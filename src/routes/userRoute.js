@@ -14,17 +14,17 @@ userRouter.get('/view', userAuth, async (req, res) => {
         const connectionRequests = await connectionRequestModel.find({
             toUserId: loggedInUser._id,
             status: "interested"
-        }).populate("fromUserId", ["firstName", "lastName"]);
+        }).populate("fromUserId", ["firstName", "lastName","skills","about","photoURL","age","email"]);
 
 
         if (connectionRequests.length === 0) {
             return res.json({
                 message: `No Pending Connections`,
-                body: null
+                data: []
             });
         }
         const data = connectionRequests.map(row => row.fromUserId);
-
+        console.log(data)
         return res.json({
             message: `Interested Pending Candidates are`,
             data: data
@@ -47,8 +47,8 @@ userRouter.get('/connections', userAuth, async (req, res) => {
                 { toUserId: loggedInUser._id, status: "accepted" }
             ]
         })
-            .populate("fromUserId", ["firstName", "lastName"])//first argument is the field of current collection having _id of other document of other colletion and second argument is array of fields to put in the data of current field
-            .populate("toUserId", ["firstName", "lastName"]);
+            .populate("fromUserId", ["firstName", "lastName","skills","about","photoURL","age"])//first argument is the field of current collection having _id of other document of other colletion and second argument is array of fields to put in the data of current field
+            .populate("toUserId", ["firstName", "lastName","skills","about","photoURL","age"]);
 
 
         const connections = connectedUsers.map((connection) => {
@@ -59,7 +59,7 @@ userRouter.get('/connections', userAuth, async (req, res) => {
 
                 return connection.fromUserId;
             }
-        });
+        })
 
         return res.json({
             message: `Your Connections`,
@@ -105,7 +105,7 @@ userRouter.get('/feed', userAuth, async (req, res) => {
                     : { skills: { $exists: true } }
             ]
         })
-            .select("firstName lastName skills about photoURL")
+            .select("firstName lastName skills about photoURL age email")
             .skip((page - 1) * limit)
             .limit(limit);
 
