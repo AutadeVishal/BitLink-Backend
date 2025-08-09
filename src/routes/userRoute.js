@@ -27,7 +27,7 @@ userRouter.get('/view', userAuth, async (req, res) => {
 
         return res.json({
             message: `Interested Pending Candidates are`,
-            body: data
+            data: data
         });
     } catch (err) {
         console.error("Error fetching connection requests:", err.message);
@@ -63,13 +63,14 @@ userRouter.get('/connections', userAuth, async (req, res) => {
 
         return res.json({
             message: `Your Connections`,
-            body: connections
+            data: connections
         });
     } catch (err) {
         console.error("Error fetching connections:", err.message);
         res.status(500).send("Not Able to Get Connections");
     }
 });
+
 
 userRouter.get('/feed', userAuth, async (req, res) => {
     try {
