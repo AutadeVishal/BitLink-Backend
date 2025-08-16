@@ -26,12 +26,16 @@ authRouter.post("/signup", async (req, res) => {
       age,
       gender,
       skills,
-      profileURL
     });
     const insertedDocument = await newUser.save();
     console.log(" User created:", insertedDocument);
-
-   return res.status(201).json({ message: "User created successfully" });
+    const token = await insertedDocument.getJWT();
+    res.cookie("token", token);
+    console.log("User logged in:", insertedDocument.email);
+    return res.json({
+      message:"User SuccessFully Created And Logged In :"+insertedDocument.email,
+      data: insertedDocument
+    });
   } catch (err) {
     console.error("Error in /signup:", err.message);
    return res.status(501).json({ message: err.message });
