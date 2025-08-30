@@ -7,6 +7,15 @@ const authRouter=require('./routes/auth.js');
 const profileRouter=require('./routes/profile.js');
 const requestRouter=require('./routes/connection.js');
 const userRouter=require('./routes/userRoute.js');
+const initialiseSocket = require('./utils/socket.js');
+
+const http=require("http");
+
+const server=http.createServer(app);
+
+initialiseSocket(server);
+
+
 app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
@@ -14,7 +23,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 connectDB()
-.then(()=>app.listen(3000, () => {
+.then(()=>server.listen(3000, () => {
     console.log("Server is running on port 3000");
 }));
 
@@ -24,3 +33,5 @@ app.use('/auth',authRouter);
 app.use('/profile',profileRouter);
 app.use('/connection',requestRouter);
 app.use('/request',userRouter);
+
+
