@@ -7,6 +7,7 @@ const authRouter=require('./routes/auth.js');
 const profileRouter=require('./routes/profile.js');
 const requestRouter=require('./routes/connection.js');
 const userRouter=require('./routes/userRoute.js');
+const {chatRouter}=require('./routes/chat.js')
 const initialiseSocket = require('./utils/socket.js');
 
 const http=require("http");
@@ -33,5 +34,5 @@ app.use('/auth',authRouter);
 app.use('/profile',profileRouter);
 app.use('/connection',requestRouter);
 app.use('/request',userRouter);
-
+app.use('/',chatRouter); 
 
