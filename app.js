@@ -11,6 +11,7 @@ const userRouter=require('./src/routes/userRoute.js');
 const {chatRouter}=require('./src/routes/chat.js')
 const initialiseSocket = require('./src/utils/socket.js');
 const BASE_URL=process.env.BASE_URL;
+const PORT=process.env.PORT;
 const http=require("http");
 
 const server=http.createServer(app);
@@ -25,8 +26,8 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 connectDB()
-.then(()=>server.listen(3000, () => {
-    console.log("Server is running");
+.then(()=>server.listen(PORT, () => {
+    console.log("Server is running",PORT);
 }));
 
 
@@ -36,4 +37,6 @@ app.use('/profile',profileRouter);
 app.use('/connection',requestRouter);
 app.use('/request',userRouter);
 app.use('/',chatRouter);
-
+app.get('/get', (req, res) => {
+  res.send("This is the /get page.");
+});
