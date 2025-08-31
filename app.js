@@ -19,14 +19,14 @@ initialiseSocket(server);
 
 
 app.use(cors({
-  origin: {BASE_URL},
+  origin:BASE_URL,
   credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());
 connectDB()
 .then(()=>server.listen(3000, () => {
-    console.log("Server is running on port 3000");
+    console.log("Server is running");
 }));
 
 
