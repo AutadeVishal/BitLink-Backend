@@ -19,7 +19,8 @@
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon src/app.js",
+    "start": "node app.js",
+    "startmon": "nodemon src/app.js",
     "build": "node src/app.js"
   },
   "dependencies": {
