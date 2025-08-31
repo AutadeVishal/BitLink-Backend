@@ -1,27 +1,21 @@
 {
-  "name": "codemate-backend",
+  "name": "bitlink-backend",
   "version": "1.0.0",
-  "description": "Tinder For Developers",
-  "keywords": [
-    "Node.js",
-    "Backend"
-  ],
-  "homepage": "https://github.com/AutadeVishal/Code_Mate#readme",
+  "description": "Backend of Bitlink",
+  "homepage": "https://github.com/AutadeVishal/BitLink-Backend#readme",
   "bugs": {
-    "url": "https://github.com/AutadeVishal/Code_Mate/issues"
+    "url": "https://github.com/AutadeVishal/BitLink-Backend/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AutadeVishal/Code_Mate.git"
+    "url": "git+https://github.com/AutadeVishal/BitLink-Backend.git"
   },
   "license": "ISC",
-  "author": "Vishal",
+  "author": "Vishal Autade",
   "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "startmon": "nodemon src/app.js",
-    "build": "node src/app.js"
+    "start": "nodemon app.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -30,9 +24,9 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.1",
-    "nodemon": "^3.1.10",
+    "mongoose": "^8.18.0",
     "socket.io": "^4.8.1",
     "validator": "^13.15.15"
-  }
+  },
+  "devDependencies": {}
 }
