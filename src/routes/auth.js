@@ -3,7 +3,6 @@ const express = require("express");
 const authRouter = express.Router();
 const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
-const dummydata=require('./dummy_users_100.js')
 const { validateSignUpData } = require("../utils/validation");
 authRouter.post("/signup", async (req, res) => {
   try {

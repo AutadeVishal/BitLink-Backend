@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { mongoURL } =require("./constants")
+const mongoURL=process.env.mongoURL;
 const connectDB = async () => {
   try {
     await mongoose.connect(

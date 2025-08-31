@@ -4,7 +4,7 @@ const User = require('../models/user.js');
 const { validateEditProfileData } = require('../utils/validation.js')
 const userAuth = require('../middlewares/userAuth.js')
 const bcrypt=require('bcrypt');
-const {SECRET_KEY}=require('../config/constants.js');
+const SECRET_KEY=process.env.SECRET_KEY;
 
 
 profileRouter.get('/view', userAuth, async (req, res) => {

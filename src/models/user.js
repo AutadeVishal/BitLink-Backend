@@ -3,7 +3,7 @@ const isvalidemail = require("validator").isEmail;
 const isvalidpassword = require("validator").isStrongPassword;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { SECRET_KEY } = require("../config/constants");
+const SECRET_KEY  = process.env.SECRET_KEY;
 const userSchema = new mongoose.Schema(
   {
     firstName: {
