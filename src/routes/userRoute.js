@@ -76,8 +76,12 @@ userRouter.get('/feed', userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
         let page = parseInt(req.query.page) || 1;
-        let limit = parseInt(req.query.limit);
+        let limit = parseInt(req.query.limit) || 10; // Add default value
         limit = limit > 50 ? 50 : limit;
+        
+        // Validate page and limit are positive numbers
+        page = Math.max(1, page);
+        limit = Math.max(1, Math.min(50, limit));
 
         console.log("Logged-in User Skills:", loggedInUser.skills);
 

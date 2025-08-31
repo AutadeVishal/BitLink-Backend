@@ -62,6 +62,7 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+userSchema.index({ skills: 1 }); // for feed skill matching
 userSchema.methods.getJWT = function () {
   // const token=await jwt.sign({password:this.password},"1234");
   const token = jwt.sign({ _id: this._id }, SECRET_KEY, { expiresIn: "1h" });

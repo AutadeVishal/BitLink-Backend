@@ -28,5 +28,13 @@ const chatSchema = new mongoose.Schema({
 });
 
 
+chatSchema.pre('save', function (next) {
+    if (this.participants.length > 2) {
+        return next(new Error("Chat cannot have more than 2 participants"));
+    }
+    next();
+});
+
+
 const Chat = mongoose.model("Chat", chatSchema);
 module.exports = { Chat };

@@ -4,18 +4,12 @@ const authRouter = express.Router();
 const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
 const { validateSignUpData } = require("../utils/validation");
+
 authRouter.post("/signup", async (req, res) => {
   try {
     await validateSignUpData(req.body); // Validate the input data
-    const passwordHash = await bcrypt.hash(req.body.password, 10);
-    const { firstName, lastName, email, password, age, gender, skills ,profileURL} =
-      req.body;
-
-    const user = await User.findOne({ email: req.body.email });
-    if (user) {
-      throw new Error("User With This Email Id Already Exists:");
-    }
-    
+    const { firstName, lastName, email, password, age, gender, skills, photoURL } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new User({
       firstName,
@@ -23,53 +17,45 @@ authRouter.post("/signup", async (req, res) => {
       email,
       password: passwordHash,
       age,
-      gender,
+      gender: gender.toLowerCase(),
       skills,
+      photoURL
     });
+
     const insertedDocument = await newUser.save();
-    console.log(" User created:", insertedDocument);
     const token = await insertedDocument.getJWT();
-    res.cookie("token", token);
-    console.log("User logged in:", insertedDocument.email);
+    res.cookie("token", token, { httpOnly: true });
     return res.json({
-      message:"User SuccessFully Created And Logged In :"+insertedDocument.email,
+      message: "User created & logged in",
       data: insertedDocument
     });
   } catch (err) {
-    console.error("Error in /signup:", err.message);
-   return res.status(501).json({ message: err.message });
+    const msg = err.message || "Signup failed";
+    const code = /exists|already/i.test(msg) ? 409 : 400;
+    return res.status(code).json({ message: msg });
   }
 });
 
 authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    if (!email || !password)
+      return res.status(400).json({ message: "Email and password are required" });
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).send("User Not Found");
-    }
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
     const isPasswordValid = await user.validatePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).send("Invalid Password");
-    }
+    if (!isPasswordValid) return res.status(401).json({ message: "Invalid credentials" });
     const token = await user.getJWT();
-    res.cookie("token", token);
-    console.log("User logged in:", user.email);
-    return res.json({
-      message:"User SuccessFully Logged In :"+user.email,
-      data: user
-    });
-  } catch (err) {
-    console.error("Error in /login:", err.message);
-    return res.status(400).send(err.message);
+    res.cookie("token", token, { httpOnly: true });
+    return res.json({ message: "Logged in", data: user });
+  } catch {
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
-authRouter.post("/logout", async (req, res) => {
-  res.cookie("token", null, {
-    expires: new Date(Date.now()),
-  });
-  console.log("User Logged Out");
-  res.send("Log Out SuccessFully");
+authRouter.post("/logout", async (_req, res) => {
+  res.cookie("token", null, { expires: new Date(0) });
+  res.json({ message: "Logged out" });
 });
+
 module.exports = authRouter;
