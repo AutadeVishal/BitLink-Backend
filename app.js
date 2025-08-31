@@ -31,12 +31,11 @@ connectDB()
 }));
 
 
-
 app.use('/auth',authRouter);
 app.use('/profile',profileRouter);
 app.use('/connection',requestRouter);
 app.use('/request',userRouter);
 app.use('/',chatRouter);
-app.get('/get', (req, res) => {
-  res.send("This is the /get page.");
+app.get('/', (req, res) => {
+  res.send("This Shows Backend Working");
 });

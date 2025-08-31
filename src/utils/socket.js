@@ -1,10 +1,11 @@
 const socket = require("socket.io");
 const { Chat } = require('../models/chat')
+const BASE_URL=process.env.BASE_URL;
 const initialiseSocket = (server) => {
 
     const io = socket(server, {
         cors: {
-            origin: "http://localhost:5173",
+            origin:BASE_URL,
         },
     })
 
