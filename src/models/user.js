@@ -3,7 +3,7 @@ const isvalidemail = require("validator").isEmail;
 const isvalidpassword = require("validator").isStrongPassword;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const SECRET_KEY  = process.env.SECRET_KEY;
+const { SECRET_KEY, JWT_EXPIRY } = require("../config/constants.js");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -52,7 +52,10 @@ const userSchema = new mongoose.Schema(
       default: "Description Not Available",
       maxlength: 300,
     },
-    skills: { type: [String] },
+    skills: {
+      type: [mongoose.Schema.Types.Mixed],
+      default: []
+    },
     photoURL: {
       type: String,
       default: "https://cdn.pixabay.com/photo/2017/11/10/05/48/user-2935527_1280.png"
@@ -62,10 +65,11 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-userSchema.index({ skills: 1 }); // for feed skill matching
+userSchema.index({ "skills.name": 1, "skills.level": 1 });
+userSchema.index({ firstName: 1, lastName: 1 });
 userSchema.methods.getJWT = function () {
   // const token=await jwt.sign({password:this.password},"1234");
-  const token = jwt.sign({ _id: this._id }, SECRET_KEY, { expiresIn: "1h" });
+  const token = jwt.sign({ _id: this._id }, SECRET_KEY, { expiresIn: JWT_EXPIRY });
   return token;
 };
 userSchema.methods.validatePassword = async function (password) {

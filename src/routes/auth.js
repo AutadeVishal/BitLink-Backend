@@ -4,12 +4,20 @@ const authRouter = express.Router();
 const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
 const { validateSignUpData } = require("../utils/validation");
+const { normalizeSkillList } = require("../utils/skills");
+const { BCRYPT_SALT_ROUNDS } = require("../config/constants.js");
+
+const sanitizeUser = (userDocument) => {
+  const plainUser = userDocument.toObject ? userDocument.toObject() : { ...userDocument };
+  delete plainUser.password;
+  return plainUser;
+};
 
 authRouter.post("/signup", async (req, res) => {
   try {
     await validateSignUpData(req.body); // Validate the input data
     const { firstName, lastName, email, password, age, gender, skills, photoURL } = req.body;
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 
     const newUser = new User({
       firstName,
@@ -18,7 +26,7 @@ authRouter.post("/signup", async (req, res) => {
       password: passwordHash,
       age,
       gender: gender.toLowerCase(),
-      skills,
+      skills: normalizeSkillList(skills || []),
       photoURL
     });
 
@@ -27,7 +35,7 @@ authRouter.post("/signup", async (req, res) => {
     res.cookie("token", token, { httpOnly: true });
     return res.json({
       message: "User created & logged in",
-      data: insertedDocument
+      data: sanitizeUser(insertedDocument)
     });
   } catch (err) {
     const msg = err.message || "Signup failed";
@@ -47,7 +55,7 @@ authRouter.post("/login", async (req, res) => {
     if (!isPasswordValid) return res.status(401).json({ message: "Invalid credentials" });
     const token = await user.getJWT();
     res.cookie("token", token, { httpOnly: true });
-    return res.json({ message: "Logged in", data: user });
+    return res.json({ message: "Logged in", data: sanitizeUser(user) });
   } catch {
     return res.status(500).json({ message: "Internal server error" });
   }

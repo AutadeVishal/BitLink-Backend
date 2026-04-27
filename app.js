@@ -8,10 +8,10 @@ const authRouter=require('./src/routes/auth.js');
 const profileRouter=require('./src/routes/profile.js');
 const requestRouter=require('./src/routes/connection.js');
 const userRouter=require('./src/routes/userRoute.js');
+const projectRouter=require('./src/routes/project.js');
 const {chatRouter}=require('./src/routes/chat.js')
 const initialiseSocket = require('./src/utils/socket.js');
-const BASE_URL=process.env.BASE_URL;
-const PORT=process.env.PORT;
+const { BASE_URL, PORT } = require('./src/config/constants.js');
 const http=require("http");
 
 const server=http.createServer(app);
@@ -35,6 +35,7 @@ app.use('/auth',authRouter);
 app.use('/profile',profileRouter);
 app.use('/connection',requestRouter);
 app.use('/request',userRouter);
+app.use('/project',projectRouter);
 app.use('/',chatRouter);
 app.get('/', (req, res) => {
   res.send("This Shows Backend Working");

@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const mongoURL=process.env.mongoURL;
+const { MONGO_URL } = require('./constants.js');
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      mongoURL
+      MONGO_URL
     );
     console.log("Database  connected successfully");
   } catch (err) {
