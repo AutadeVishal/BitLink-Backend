@@ -32,7 +32,12 @@ authRouter.post("/signup", async (req, res) => {
 
     const insertedDocument = await newUser.save();
     const token = await insertedDocument.getJWT();
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", null, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      expires: new Date(100 * 60 * 60 * 1000),
+    });
     return res.json({
       message: "User created & logged in",
       data: sanitizeUser(insertedDocument)
@@ -54,7 +59,12 @@ authRouter.post("/login", async (req, res) => {
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) return res.status(401).json({ message: "Invalid credentials" });
     const token = await user.getJWT();
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", null, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      expires: new Date(100 * 60 * 60 * 1000),
+    });
     return res.json({ message: "Logged in", data: sanitizeUser(user) });
   } catch {
     return res.status(500).json({ message: "Internal server error" });
@@ -62,7 +72,7 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (_req, res) => {
-  res.cookie("token", null, { expires: new Date(0) });
+  res.cookie("token", null, { expires: new Date(100*60*60*1000), httpOnly: true, secure: true, sameSite: "none" });
   res.json({ message: "Logged out" });
 });
 
