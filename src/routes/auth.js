@@ -7,6 +7,13 @@ const { validateSignUpData } = require("../utils/validation");
 const { normalizeSkillList } = require("../utils/skills");
 const { BCRYPT_SALT_ROUNDS } = require("../config/constants.js");
 
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  expires: new Date(Date.now() + 100 * 60 * 60 * 1000),
+};
+
 const sanitizeUser = (userDocument) => {
   const plainUser = userDocument.toObject ? userDocument.toObject() : { ...userDocument };
   delete plainUser.password;
@@ -32,12 +39,7 @@ authRouter.post("/signup", async (req, res) => {
 
     const insertedDocument = await newUser.save();
     const token = await insertedDocument.getJWT();
-    res.cookie("token", null, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      expires: new Date(100 * 60 * 60 * 1000),
-    });
+    res.cookie("token", token, AUTH_COOKIE_OPTIONS);
     return res.json({
       message: "User created & logged in",
       data: sanitizeUser(insertedDocument)
@@ -59,12 +61,7 @@ authRouter.post("/login", async (req, res) => {
     const isPasswordValid = await user.validatePassword(password);
     if (!isPasswordValid) return res.status(401).json({ message: "Invalid credentials" });
     const token = await user.getJWT();
-    res.cookie("token", null, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      expires: new Date(100 * 60 * 60 * 1000),
-    });
+    res.cookie("token", token, AUTH_COOKIE_OPTIONS);
     return res.json({ message: "Logged in", data: sanitizeUser(user) });
   } catch {
     return res.status(500).json({ message: "Internal server error" });
@@ -72,7 +69,11 @@ authRouter.post("/login", async (req, res) => {
 });
 
 authRouter.post("/logout", async (_req, res) => {
-  res.cookie("token", null, { expires: new Date(100*60*60*1000), httpOnly: true, secure: true, sameSite: "none" });
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
   res.json({ message: "Logged out" });
 });
 
